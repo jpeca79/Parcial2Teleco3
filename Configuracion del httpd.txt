@@ -1,0 +1,530 @@
+# Example config file /etc/vsftpd/vsftpd.conf
+#
+# The default compiled in settings are fairly paranoid. This sample file
+# loosens things up a bit, to make the ftp daemon more usable.
+# Please see vsftpd.conf.5 for all compiled in defaults.
+#
+# READ THIS: This example file is NOT an exhaustive list of vsftpd options.
+# Please read the vsftpd.conf.5 manual page to get a full idea of vsftpd's
+# capabilities.
+#
+# Allow anonymous FTP? (Beware - allowed by default if you comment this out).
+anonymous_enable=YES
+#anon_world_readable_only=NO
+anon_root=/var/anonymous/
+#anon_upload_enable=YES
+# Uncomment this to allow local users to log in.
+local_enable=YES
+#
+# Uncomment this to enable any form of FTP write command.
+write_enable=YES
+#
+# Default umask for local users is 077. You may wish to change this to 022,
+# if your users expect that (022 is used by most other ftpd's)
+local_umask=022
+#
+# Uncomment this to allow the anonymous FTP user to upload files. This only
+# has an effect if the above global write enable is activated. Also, you will
+# obviously need to create a directory writable by the FTP user.
+# When SELinux is enforcing check for SE bool allow_ftpd_anon_write, allow_ftpd_full_access
+#anon_upload_enable=YES
+#
+# Uncomment this if you want the anonymous FTP user to be able to create
+# new directories.
+#anon_mkdir_write_enable=YES
+#
+# Activate directory messages - messages given to remote users when they
+# go into a certain directory.
+dirmessage_enable=YES
+#
+# Activate logging of uploads/downloads.
+xferlog_enable=YES
+#
+# Make sure PORT transfer connections originate from port 20 (ftp-data).
+connect_from_port_20=YES
+#
+# If you want, you can arrange for uploaded anonymous files to be owned by
+# a different user. Note! Using "root" for uploaded files is not
+# recommended!
+#chown_uploads=YES
+#chown_username=whoever
+#
+# You may override where the log file goes if you like. The default is shown
+# below.
+#xferlog_file=/var/log/xferlog
+#
+# If you want, you can have your log file in standard ftpd xferlog format.
+# Note that the default log file location is /var/log/xferlog in this case.
+xferlog_std_format=YES
+#
+# You may change the default value for timing out an idle session.
+#idle_session_timeout=600
+#
+# You may change the default value for timing out a data connection.
+#data_connection_timeout=120
+#
+# It is recommended that you define on your system a unique user which the
+# ftp server can use as a totally isolated and unprivileged user.
+#nopriv_user=ftpsecure
+#
+# Enable this and the server will recognise asynchronous ABOR requests. Not
+# recommended for security (the code is non-trivial). Not enabling it,
+# however, may confuse older FTP clients.
+#async_abor_enable=YES
+#
+# By default the server will pretend to allow ASCII mode but in fact ignore
+# the request. Turn on the below options to have the server actually do ASCII
+# mangling on files when in ASCII mode. The vsftpd.conf(5) man page explains
+# the behaviour when these options are disabled.
+# Beware that on some FTP servers, ASCII support allows a denial of service
+# attack (DoS) via the command "SIZE /big/file" in ASCII mode. vsftpd
+# predicted this attack and has always been safe, reporting the size of the
+# raw file.
+# ASCII mangling is a horrible feature of the protocol.
+#ascii_upload_enable=YES
+#ascii_download_enable=YES
+#
+# You may fully customise the login banner string:
+ftpd_banner=Welcome to Joshep the service.
+#
+# You may specify a file of disallowed anonymous e-mail addresses. Apparently
+# useful for combatting certain DoS attacks.
+#deny_email_enable=YES
+# (default follows)
+#banned_email_file=/etc/vsftpd/banned_emails
+#
+# You may specify an explicit list of local users to chroot() to their home
+# directory. If chroot_local_user is YES, then this list becomes a list of
+# users to NOT chroot().
+# (Warning! chroot'ing can be very dangerous. If using chroot, make sure that
+# the user does not have write access to the top level directory within the
+# chroot)
+chroot_local_user=NO
+chroot_list_enable=YES
+# (default follows)
+chroot_list_file=/etc/vsftpd/chroot_list
+#
+allow_writeable_chroot=YES
+
+#configuracion del vsftpd seguro
+
+rsa_cert_file=/etc/pki/tls/certs/ca.crt
+
+rsa_private_key_file=/etc/pki/tls/private/ca.key
+
+ssl_enable=YES
+
+# You may activate the "-R" option to the builtin ls. This is disabled by
+# default to avoid remote users being able to cause excessive I/O on large
+# sites. However, some broken FTP clients such as "ncftp" and "mirror" assume
+# the presence of the "-R" option, so there is a strong case for enabling it.
+#ls_recurse_enable=YES
+#
+# When "listen" directive is enabled, vsftpd runs in standalone mode and
+# listens on IPv4 sockets. This directive cannot be used in conjunction
+# with the listen_ipv6 directive.
+listen=NO
+#
+# This directive enables listening on IPv6 sockets. By default, listening
+# on the IPv6 "any" address (::) will accept connections from both IPv6
+# and IPv4 clients. It is not necessary to listen on *both* IPv4 and IPv6
+# sockets. If you want that (perhaps because you want to listen on specific
+# addresses) then you must run two copies of vsftpd with two configuration
+# files.
+# Make sure, that one of the listen options is commented !!
+listen_ipv6=YES
+
+pam_service_name=vsftpd
+userlist_enable=YES
+
+[root@servidor ~]# cat /etc/httpd/conf/httpd.conf
+#
+# This is the main Apache HTTP server configuration file.  It contains the
+# configuration directives that give the server its instructions.
+# See <URL:http://httpd.apache.org/docs/2.4/> for detailed information.
+# In particular, see
+# <URL:http://httpd.apache.org/docs/2.4/mod/directives.html>
+# for a discussion of each configuration directive.
+#
+# See the httpd.conf(5) man page for more information on this configuration,
+# and httpd.service(8) on using and configuring the httpd service.
+#
+# Do NOT simply read the instructions in here without understanding
+# what they do.  They're here only as hints or reminders.  If you are unsure
+# consult the online docs. You have been warned.
+#
+# Configuration and logfile names: If the filenames you specify for many
+# of the server's control files begin with "/" (or "drive:/" for Win32), the
+# server will use that explicit path.  If the filenames do *not* begin
+# with "/", the value of ServerRoot is prepended -- so 'log/access_log'
+# with ServerRoot set to '/www' will be interpreted by the
+# server as '/www/log/access_log', where as '/log/access_log' will be
+# interpreted as '/log/access_log'.
+
+#
+# ServerRoot: The top of the directory tree under which the server's
+# configuration, error, and log files are kept.
+#
+# Do not add a slash at the end of the directory path.  If you point
+# ServerRoot at a non-local disk, be sure to specify a local disk on the
+# Mutex directive, if file-based mutexes are used.  If you wish to share the
+# same ServerRoot for multiple httpd daemons, you will need to change at
+# least PidFile.
+#
+ServerRoot "/etc/httpd"
+
+#
+# Listen: Allows you to bind Apache to specific IP addresses and/or
+# ports, instead of the default. See also the <VirtualHost>
+# directive.
+#
+# Change this to Listen on a specific IP address, but note that if
+# httpd.service is enabled to run at boot time, the address may not be
+# available when the service starts.  See the httpd.service(8) man
+# page for more information.
+#
+#Listen 12.34.56.78:80
+NameVirtualHost *:80
+NameVirtualHost *:443
+#Listen 80
+
+<VirtualHost *:443>
+        SSLEngine On
+        SSLCertificateFile /etc/pki/tls/certs/ca.crt
+        SSLCertificateKeyFile /etc/pki/tls/private/ca.key
+        DocumentRoot /var/www/html/
+        ServerName www.servicios.com
+</VirtualHost>
+
+<VirtualHost *:80>
+        SSLEngine Off
+        DocumentRoot /var/www/html/
+        ServerName www.servicios.com
+</VirtualHost>
+
+
+#<VirtualHost *:80>
+#       ServerName www.miotrositio.com
+#       DocumentRoot /var/www/html
+#</VirtualHost>
+
+#<VirtualHost *:80>
+#        ServerName joshep.com
+#       ServerAlias www.joshep.com
+#        DocumentRoot /var/www/html
+#</VirtualHost>
+
+# Dynamic Shared Object (DSO) Support
+#
+# To be able to use the functionality of a module which was built as a DSO you
+# have to place corresponding `LoadModule' lines at this location so the
+# directives contained in it are actually available _before_ they are used.
+# Statically compiled modules (those listed by `httpd -l') do not need
+# to be loaded here.
+#
+# Example:
+# LoadModule foo_module modules/mod_foo.so
+#
+Include conf.modules.d/*.conf
+
+#
+# If you wish httpd to run as a different user or group, you must run
+# httpd as root initially and it will switch.
+#
+# User/Group: The name (or #number) of the user/group to run httpd as.
+# It is usually good practice to create a dedicated user and group for
+# running httpd, as with most system services.
+#
+User apache
+Group apache
+
+# 'Main' server configuration
+#
+# The directives in this section set up the values used by the 'main'
+# server, which responds to any requests that aren't handled by a
+# <VirtualHost> definition.  These values also provide defaults for
+# any <VirtualHost> containers you may define later in the file.
+#
+# All of these directives may appear inside <VirtualHost> containers,
+# in which case these default settings will be overridden for the
+# virtual host being defined.
+#
+
+#
+# ServerAdmin: Your address, where problems with the server should be
+# e-mailed.  This address appears on some server-generated pages, such
+# as error documents.  e.g. admin@your-domain.com
+#
+ServerAdmin root@localhost
+
+#
+# ServerName gives the name and port that the server uses to identify itself.
+# This can often be determined automatically, but we recommend you specify
+# it explicitly to prevent problems during startup.
+#
+# If your host doesn't have a registered DNS name, enter its IP address here.
+#
+#ServerName www.example.com:80
+
+#
+# Deny access to the entirety of your server's filesystem. You must
+# explicitly permit access to web content directories in other
+# <Directory> blocks below.
+#
+<Directory />
+    AllowOverride none
+    Require all denied
+</Directory>
+
+#
+# Note that from this point forward you must specifically allow
+# particular features to be enabled - so if something's not working as
+# you might expect, make sure that you have specifically enabled it
+# below.
+#
+
+#
+# DocumentRoot: The directory out of which you will serve your
+# documents. By default, all requests are taken from this directory, but
+# symbolic links and aliases may be used to point to other locations.
+#
+DocumentRoot "/var/www/html"
+
+#
+# Relax access to content within /var/www.
+#
+<Directory "/var/www">
+    AllowOverride None
+    # Allow open access:
+    Require all granted
+</Directory>
+
+# Further relax access to the default document root:
+<Directory "/var/www/html">
+    #Options Indexes FollowSymLinks
+    #AllowOverride None
+    #Require all granted
+    Order allow,deny
+    Allow from all
+    Deny from 192.168.50.2
+</Directory>
+
+<Directory "/var/www/html/protegido">
+        AuthType Basic
+        AuthName "Directorio protegido"
+        AuthUserFile /etc/httpd/claves
+        Require valid-user
+</Directory>
+#
+<Directory "/var/www/html/inventario">
+        AllowOverride AuthConfig
+</Directory>
+
+
+
+#
+# DirectoryIndex: sets the file that Apache will serve if a directory
+# is requested.
+#
+<IfModule dir_module>
+    DirectoryIndex main.html
+</IfModule>
+
+<IfModule mod_deflate.c>
+    # Comprimir los siguientes tipos MIME
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+# The following lines prevent .htaccess and .htpasswd files from being
+# viewed by Web clients.
+#
+<Files ".ht*">
+    Require all denied
+</Files>
+
+#
+# ErrorLog: The location of the error log file.
+# If you do not specify an ErrorLog directive within a <VirtualHost>
+# container, error messages relating to that virtual host will be
+# logged here.  If you *do* define an error logfile for a <VirtualHost>
+# container, that host's errors will be logged there and not here.
+#
+ErrorLog "logs/error_log"
+
+#
+# LogLevel: Control the number of messages logged to the error_log.
+# Possible values include: debug, info, notice, warn, error, crit,
+# alert, emerg.
+#
+LogLevel warn
+
+<IfModule log_config_module>
+    #
+    # The following directives define some format nicknames for use with
+    # a CustomLog directive (see below).
+    #
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
+
+    <IfModule logio_module>
+      # You need to enable mod_logio.c to use %I and %O
+      LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+    </IfModule>
+
+    #
+    # The location and format of the access logfile (Common Logfile Format).
+    # If you do not define any access logfiles within a <VirtualHost>
+    # container, they will be logged here.  Contrariwise, if you *do*
+    # define per-<VirtualHost> access logfiles, transactions will be
+    # logged therein and *not* in this file.
+    #
+    #CustomLog "logs/access_log" common
+
+    #
+    # If you prefer a logfile with access, agent, and referer information
+    # (Combined Logfile Format) you can use the following directive.
+    #
+    CustomLog "logs/access_log" combined
+</IfModule>
+
+<IfModule alias_module>
+    #
+    # Redirect: Allows you to tell clients about documents that used to
+    # exist in your server's namespace, but do not anymore. The client
+    # will make a new request for the document at its new location.
+    # Example:
+    # Redirect permanent /foo http://www.example.com/bar
+
+    #
+    # Alias: Maps web paths into filesystem paths and is used to
+    # access content that does not live under the DocumentRoot.
+    # Example:
+    # Alias /webpath /full/filesystem/path
+    #
+    # If you include a trailing / on /webpath then the server will
+    # require it to be present in the URL.  You will also likely
+    # need to provide a <Directory> section to allow access to
+    # the filesystem path.
+
+    #
+    # ScriptAlias: This controls which directories contain server scripts.
+    # ScriptAliases are essentially the same as Aliases, except that
+    # documents in the target directory are treated as applications and
+    # run by the server when requested rather than as documents sent to the
+    # client.  The same rules about trailing "/" apply to ScriptAlias
+    # directives as to Alias.
+    #
+    ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+
+</IfModule>
+
+#
+# "/var/www/cgi-bin" should be changed to whatever your ScriptAliased
+# CGI directory exists, if you have that configured.
+#
+<Directory "/var/www/cgi-bin">
+    AllowOverride None
+    Options None
+    Require all granted
+</Directory>
+
+<IfModule mime_module>
+    #
+    # TypesConfig points to the file containing the list of mappings from
+    # filename extension to MIME-type.
+    #
+    TypesConfig /etc/mime.types
+
+    #
+    # AddType allows you to add to or override the MIME configuration
+    # file specified in TypesConfig for specific file types.
+    #
+    #AddType application/x-gzip .tgz
+    #
+    # AddEncoding allows you to have certain browsers uncompress
+    # information on the fly. Note: Not all browsers support this.
+    #
+    #AddEncoding x-compress .Z
+    #AddEncoding x-gzip .gz .tgz
+    #
+    # If the AddEncoding directives above are commented-out, then you
+    # probably should define those extensions to indicate media types:
+    #
+    AddType application/x-compress .Z
+    AddType application/x-gzip .gz .tgz
+
+    #
+    # AddHandler allows you to map certain file extensions to "handlers":
+    # actions unrelated to filetype. These can be either built into the server
+    # or added with the Action directive (see below)
+    #
+    # To use CGI scripts outside of ScriptAliased directories:
+    # (You will also need to add "ExecCGI" to the "Options" directive.)
+    #
+    #AddHandler cgi-script .cgi
+
+    # For type maps (negotiated resources):
+    #AddHandler type-map var
+
+    #
+    # Filters allow you to process content before it is sent to the client.
+    #
+    # To parse .shtml files for server-side includes (SSI):
+    # (You will also need to add "Includes" to the "Options" directive.)
+    #
+    AddType text/html .shtml
+    AddOutputFilter INCLUDES .shtml
+</IfModule>
+
+#
+# Specify a default charset for all content served; this enables
+# interpretation of all content as UTF-8 by default.  To use the
+# default browser choice (ISO-8859-1), or to allow the META tags
+# in HTML content to override this choice, comment out this
+# directive:
+#
+AddDefaultCharset UTF-8
+
+<IfModule mime_magic_module>
+    #
+    # The mod_mime_magic module allows the server to use various hints from the
+    # contents of the file itself to determine its type.  The MIMEMagicFile
+    # directive tells the module where the hint definitions are located.
+    #
+    MIMEMagicFile conf/magic
+</IfModule>
+
+#
+# Customizable error responses come in three flavors:
+# 1) plain text 2) local redirects 3) external redirects
+#
+# Some examples:
+#ErrorDocument 500 "The server made a boo boo."
+#ErrorDocument 404 /missing.html
+#ErrorDocument 404 "/cgi-bin/missing_handler.pl"
+#ErrorDocument 402 http://www.example.com/subscription_info.html
+#
+
+#
+# EnableMMAP and EnableSendfile: On systems that support it,
+# memory-mapping or the sendfile syscall may be used to deliver
+# files.  This usually improves server performance, but must
+# be turned off when serving from networked-mounted
+# filesystems or if support for these functions is otherwise
+# broken on your system.
+# Defaults if commented: EnableMMAP On, EnableSendfile Off
+#
+#EnableMMAP off
+EnableSendfile on
+
+# Supplemental configuration
+#
+# Load config files in the "/etc/httpd/conf.d" directory, if any.
+IncludeOptional conf.d/*.conf
